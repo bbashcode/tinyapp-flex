@@ -9,7 +9,7 @@ app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
 
-const urlDatabase = {
+let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
@@ -42,10 +42,18 @@ app.get("/urls:shortURL", (req, res) => {
   res.render("urls_show", templateVars);
 });
 
-//TODO: check this route - not working as expected
-app.post("urls/new", (req, res) => {
-  console.log(req.body);
-  res.send("Ok");
+
+
+app.post("/urls", (req, res) => {
+  const {longURL} = req.body;
+  const shortURL = generateRandomString();
+  urlDatabase = {...urlDatabase, [shortURL]: longURL};
+  res.redirect(302, `/urls/${shortURL}`);
+});
+
+app.get("/u/:shortURL", (req, res) => {
+  const {longURL} = req.body;
+  res.redirect(longURL);
 });
 
 app.listen(PORT, () => {
