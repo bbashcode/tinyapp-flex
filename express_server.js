@@ -8,16 +8,18 @@ const PORT = 8080; // default port 8080
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 
-
+// TODO: possibly move to data layer
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
 };
 
+//TODO: Redirect to res.render(/urls)
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
 
+//TODO: Remove later - Cleanup
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -36,8 +38,8 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
-//TODO: check this route
-app.get("/urls:shortURL", (req, res) => {
+
+app.get("/urls/:shortURL", (req, res) => {
   const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL]};
   res.render("urls_show", templateVars);
 });
@@ -60,7 +62,7 @@ app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
 
-
+// TODO: helper function, possibly move to a different file
 //function to generate 6 character long unique renadom string
 function generateRandomString() {
   let length = 6;
