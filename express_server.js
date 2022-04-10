@@ -51,3 +51,20 @@ app.post("urls/new", (req, res) => {
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
+
+//function to generate 6 character long unique renadom string
+function generateRandomString() {
+  let length = 6;
+  let shortURL = "";
+
+  const alphaNumeric =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+  for (let i = 0; i < length; i++) {
+    let randomIndex = Math.floor(Math.random() * alphaNumeric.length);
+    shortURL += alphaNumeric.substring(randomIndex, randomIndex + 1);
+  }
+
+  return shortURL;
+}
