@@ -1,8 +1,13 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 const app = express();
 const PORT = 8080; // default port 8080
 
+
+//middlewares
 app.set("view engine", "ejs");
+app.use(bodyParser.urlencoded({extended: true}));
+
 
 const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
