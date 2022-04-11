@@ -8,13 +8,20 @@
 
 <body>
   <%- include('partials/_header') %>
-  <div class="card text-center">
+  <div class="card text-center top-box">
       <div class="card-header"></div>
       <div class="card-body">
         <h5 class="card-title">TinyURL for: <%= longURL %></h5>
         <p class="card-text">Short URL: <a href="/u/<%= shortURL %>"><%= shortURL %></a></p>
       </div>
-    <div class="card-footer text-muted"></div>
+      <form class="form-horizontal justify-content-center bg-light bottom-box" action="/urls/<%= shortURL%>/?_method=PUT" method="POST">
+        <h3 class="text-secondary bg-light" style="margin: -0.40rem;">Edit</h3>
+        <div class="form-inline mb-2 justify-content-center">
+          <label for="longURL">New URL:</label>
+          <input class="form-control" type="text" name="longURL" placeholder="http://" style="width: 200px; margin: 1rem">
+          <button type="submit" class="btn btn-primary">Submit</button>
+        </div>
+      </form>
   </div>
   <!-- Bootstrap JS -->
   <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
