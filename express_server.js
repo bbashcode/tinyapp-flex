@@ -65,9 +65,15 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   res.redirect("/urls");
 });
 
+
+app.post("/urls/:shortURL", (req, res)=> {
+  res.redirect(`/urls/${req.params.shortURL}`)
+})
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
+
 
 // TODO: helper function, possibly move to a different file
 //function to generate 6 character long unique renadom string
