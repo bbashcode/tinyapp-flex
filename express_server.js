@@ -70,6 +70,12 @@ app.post("/urls/:shortURL", (req, res)=> {
   res.redirect(`/urls/${req.params.shortURL}`)
 })
 
+
+app.post("", () => {
+
+});
+
+
 app.listen(PORT, () => {
   console.log(`Example app listening on port ${PORT}!`);
 });
