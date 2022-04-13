@@ -11,9 +11,10 @@
       </div>
     </div>
     <div class="nav navbar-nav navbar-right">
+      <span>Logged in as: <%= username %></span>
       <form class="form-inline" method="POST" action="/login">
         <div class="form-group" style="padding: 0.5rem;">
-          <input type="password" class="form-control" id="InputPassword1" placeholder="Username">
+          <input type="text" class="form-control" id="InputPassword1" placeholder="Username" name="username">
         </div>
         <button type="submit" class="btn btn-outline-dark">Login</button>
       </form>
