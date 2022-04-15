@@ -11,6 +11,30 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
 app.use(morgan("dev"));
 
+
+const findUserByEmail = (email) => {
+  for(userId in users){
+    const user = users[userId];
+    if(user.email === email) {
+      return user;
+    }
+  }
+  return null;
+};
+
+const users = { 
+  "userRandomID": {
+    id: "userRandomID", 
+    email: "user@example.com", 
+    password: "purple-monkey-dinosaur"
+  },
+ "user2RandomID": {
+    id: "user2RandomID", 
+    email: "user2@example.com", 
+    password: "dishwasher-funk"
+  }
+};
+
 // TODO: possibly move to data layer
 let urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
@@ -90,6 +114,33 @@ app.post("/logout", (req, res) => {
 app.get("/register", (req, res) => {
   const templateVars = {username: null};
   res.render("register", templateVars);
+});
+
+app.post("/register", (req, res) => {
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if(!email || !password) {
+    return res.status(400).send("Email or password cannot be empty!");
+  }
+
+  //find out if email already in use
+  const user = findUserByEmail(email);
+
+  if(user){
+    return res.status(400).send("Email alreasdy in use!");
+  }
+
+  const id = generateRandomString();
+
+  users[id] = {
+    id,
+    email,
+    password
+  };
+
+  res.cookie("user_id", id);
+  res.redirect("/urls");
 });
 
 
