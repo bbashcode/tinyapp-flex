@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
+const morgan = require("morgan");
 
 const app = express();
 const PORT = 8080;
@@ -8,6 +9,7 @@ const PORT = 8080;
 app.set("view engine", "ejs");
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(cookieParser());
+app.use(morgan("dev"));
 
 // TODO: possibly move to data layer
 let urlDatabase = {
@@ -82,6 +84,12 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("username");
   res.redirect("/urls");
+});
+
+
+app.get("/register", (req, res) => {
+  const templateVars = {username: null};
+  res.render("register", templateVars);
 });
 
 
