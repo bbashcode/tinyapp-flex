@@ -11,7 +11,11 @@
       </div>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <% if(!user) { %>
+      <div class="navbar-nav"style="padding: 0.5rem;">
+        <a class="nav-item nav-link" href="/login">Login</a>
+        <a class="nav-item nav-link" href="/register">Register</a>
+      </div>
+      <!-- <% if(!user) { %>
       <form class="form-inline" method="POST" action="/login">
         <div class="form-group" style="padding: 0.5rem;">
           <input type="text" class="form-control" id="InputPassword1" placeholder="Username" name="username">
@@ -23,7 +27,7 @@
         <form class="form-inline" method="POST" action="/logout">
           <button type="submit" class="btn btn-outline-dark">Logout</button>
         </form>
-        <% } %>
+        <% } %> -->
     </div>
   </nav>
 </header>
