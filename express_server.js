@@ -13,7 +13,7 @@ app.use(morgan("dev"));
 
 
 const findUserByEmail = (email) => {
-  for(userId in users){
+  for(let userId in users){
     const user = users[userId];
     if(user.email === email) {
       return user;
@@ -112,22 +112,22 @@ app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
+  console.log("email: ", email, "password: ", password);
   if(!email || !password) {
     return res.status(400).send("Email or password cannot be empty!");
   }
 
-  //find out if email already in use
   const user = findUserByEmail(email);
 
   if(!user){
     return res.status(403).send("User cannot be found!");
   }
 
-  if(user && user.password !== password){
+  if(user.password !== password){
     return res.status(403).send("Password did not match!");
   }
 
-  res.cookie("user_id", id);
+  res.cookie("user_id", user.id);
   res.redirect("/urls");
 
 });

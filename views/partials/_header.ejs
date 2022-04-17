@@ -11,30 +11,16 @@
       </div>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <% if(!user) { %>
-        <div class="navbar-nav"style="padding: 0.5rem;">
-          <a class="nav-item nav-link" href="/login">Login</a>
-          <a class="nav-item nav-link" href="/register">Register</a>
-        </div>
-      <% } else { %>
-        <div class="mt-2 mr-2">Logged in as: <%= user.email %></div>
-          <form class="form-inline" method="POST" action="/logout">
-            <button type="submit" class="btn btn-outline-dark">Logout</button>
-          </form>
-        <% } %>
-      <!-- <% if(!user) { %>
-      <form class="form-inline" method="POST" action="/login">
-        <div class="form-group" style="padding: 0.5rem;">
-          <input type="text" class="form-control" id="InputPassword1" placeholder="Username" name="username">
-        </div>
-        <button type="submit" class="btn btn-outline-dark">Login</button>
-      </form>
-      <% } else { %>
-        <div class="mt-2 mr-2">Logged in as: <%= email %></div>
-        <form class="form-inline" method="POST" action="/logout">
-          <button type="submit" class="btn btn-outline-dark">Logout</button>
+      <% if(!user){ %>
+        <a class="nav-item nav-link text-right" href="/login">Login</a>
+        <a class="nav-item nav-link text-right" href="/register">Register</a>
+      <% } else{ %>  
+        <form class="form-inline" action="/logout" method="POST">
+          <label for="useremail" width: 100px>Logged In As: <%= user.email %>!</label>
+          <button class="btn btn-outline-dark my-2 my-sm-0" style="margin: 0.5em" type="submit">Logout</button>
         </form>
-        <% } %> -->
+      <% } %>
     </div>
+    
   </nav>
 </header>
