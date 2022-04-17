@@ -102,7 +102,10 @@ app.post("/urls/:shortURL", (req, res)=> {
 
 
 app.get("/login", (req, res) => {
-  res.render("/login");
+  const user_id = req.cookies["user_id"];
+  const user = users[user_id];
+  const templateVars = {user};
+  res.render("login", templateVars);
 });
 
 app.post("/login", (req, res) => {
