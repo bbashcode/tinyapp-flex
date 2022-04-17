@@ -11,10 +11,17 @@
       </div>
     </div>
     <div class="nav navbar-nav navbar-right">
-      <div class="navbar-nav"style="padding: 0.5rem;">
-        <a class="nav-item nav-link" href="/login">Login</a>
-        <a class="nav-item nav-link" href="/register">Register</a>
-      </div>
+      <% if(!user) { %>
+        <div class="navbar-nav"style="padding: 0.5rem;">
+          <a class="nav-item nav-link" href="/login">Login</a>
+          <a class="nav-item nav-link" href="/register">Register</a>
+        </div>
+      <% } else { %>
+        <div class="mt-2 mr-2">Logged in as: <%= email %></div>
+          <form class="form-inline" method="POST" action="/logout">
+            <button type="submit" class="btn btn-outline-dark">Logout</button>
+          </form>
+        <% } %>
       <!-- <% if(!user) { %>
       <form class="form-inline" method="POST" action="/login">
         <div class="form-group" style="padding: 0.5rem;">

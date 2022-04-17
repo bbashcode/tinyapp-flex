@@ -109,9 +109,27 @@ app.get("/login", (req, res) => {
 });
 
 app.post("/login", (req, res) => {
-  res.cookie("username", req.body.username);
-  // console.log("username", req.body.userName);
+  const email = req.body.email;
+  const password = req.body.password;
+
+  if(!email || !password) {
+    return res.status(400).send("Email or password cannot be empty!");
+  }
+
+  //find out if email already in use
+  const user = findUserByEmail(email);
+
+  if(!user){
+    return res.status(403).send("User cannot be found!");
+  }
+
+  if(user && user.password !== password){
+    return res.status(403).send("Password did not match!");
+  }
+
+  res.cookie("user_id", id);
   res.redirect("/urls");
+
 });
 
 app.post("/logout", (req, res) => {
