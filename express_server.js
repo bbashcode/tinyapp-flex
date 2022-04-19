@@ -176,7 +176,7 @@ app.post("/login", (req, res) => {
 
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
-  res.redirect("/urls");
+  res.redirect("/login");
 });
 
 
@@ -225,7 +225,7 @@ app.listen(PORT, () => {
 
 // TODO: helper function, possibly move to a different file
 //function to generate 6 character long unique renadom string
-function generateRandomString() {
+const generateRandomString = function () {
   let length = 6;
   let shortURL = "";
 
