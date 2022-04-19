@@ -53,7 +53,6 @@ const urlDatabase = {
     }
 };
 
-//TODO: Redirect to res.render(/urls)
 app.get("/", (req, res) => {
   if(req.cookies.user_id){
     res.redirect("/urls");
@@ -62,7 +61,7 @@ app.get("/", (req, res) => {
   res.redirect("/login")
 });
 
-//TODO: Remove later - Cleanup
+//TODO: Remove later - Cleanup?
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -70,6 +69,10 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
+
+  if(!user){
+    res.status(401).send("Please login or register first!");
+  }
   const templateVars = {urls: urlDatabase[user], user};
   res.render("urls_index", templateVars);
 });
