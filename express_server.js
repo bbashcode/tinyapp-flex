@@ -55,7 +55,11 @@ const urlDatabase = {
 
 //TODO: Redirect to res.render(/urls)
 app.get("/", (req, res) => {
-  res.send("Hello!");
+  if(req.cookies.user_id){
+    res.redirect("/urls");
+  }
+
+  res.redirect("/login")
 });
 
 //TODO: Remove later - Cleanup
