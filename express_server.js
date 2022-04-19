@@ -71,6 +71,7 @@ app.get("/urls", (req, res) => {
 
 
 app.get("/urls/new", (req, res) => {
+  //only registered users can access this route to create new url
   const user_id = req.cookies["user_id"];
   if(user_id){
     const user = users[user_id];
@@ -93,6 +94,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
 
 app.post("/urls", (req, res) => {
+  //if user not logged in show an error
   if(!req.cookies.user_id){
     res.status(401).send("Please login to access your URLs!");
   }
@@ -124,7 +126,7 @@ app.post("/urls/:shortURL", (req, res)=> {
 app.get("/login", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
-  
+
   if(user_id){
     res.redirect("/urls");
   }
