@@ -81,21 +81,32 @@ app.get("/urls", (req, res) => {
 app.get("/urls/new", (req, res) => {
   //only registered users can access this route to create new url
   const user_id = req.cookies["user_id"];
-  if(user_id){
+  const user = users[user_id];
+  if(user){
     const user = users[user_id];
     const templateVars = {urls: urlDatabase,user};
     res.render("urls_new", templateVars);
   } else {
     res.redirect("/login");
   }
-
 });
 
 
 app.get("/urls/:shortURL", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
+  
+  //check if user is logged in first
+  if(!user){
+    res.render("errorAccess", {user:users[req.cookies.user_id]});
+  }
+
   const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user};
+
+  const userID = templateVars.user.id;
+  if(urlDatabase[req.params.shortURL].userID !== userID){
+    res.render("errorAccess", {user:users[req.cookies.user_id]});
+  }
 
   //TODO: if page does not exist, maybe redirect to an error page. Throw an error for now.
   if(!urlDatabase[req.params.shortURL].longURL){
@@ -130,10 +141,43 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 
+app.post("/urls/:shortURL/edit", (req, res) => {
+  //if user not logged in show an error
+  if(!req.cookies.user_id){
+    res.status(401).render("errorAccess", {user: users[req.cookies.user_id]});
+  }
+
+  const templateVars = { shortURL: req.params.shortURL, user: users[req.cookies.user_id]};
+  const userID = templateVars.user.id;
+
+  if(urlDatabase[req.params.shortURL].userID !== userID){
+    res.status(401).render("errorAccess", {user: users[req.cookies.user_id]});
+  }
+
+  urlDatabase[req.params.shortURL] = {
+    longURL: req.body.longURL,
+    userID: users[req.cookies.user_id].id
+  }
+  
+  res.redirect("/urls");
+});
+
+
+app.get("/urls/:shortURL", (req, res)=> {
+  res.redirect(`/urls/${req.params.shortURL}`)
+})
+
 app.post("/urls/:shortURL/delete", (req, res) => {
   //if user not logged in show an error
   if(!req.cookies.user_id){
-    res.status(401).send("Please login first!");
+    res.status(401).render("errorAccess", {user: users[req.cookies.user_id]});
+  }
+
+  const templateVars = { shortURL: req.params.shortURL, user: users[req.cookies.user_id]};
+  const userID = templateVars.user.id;
+
+  if(urlDatabase[req.params.shortURL].userID !== userID){
+    res.status(401).render("errorAccess", {user: users[req.cookies.user_id]});
   }
 
   delete urlDatabase[req.params.shortURL];
