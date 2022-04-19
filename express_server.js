@@ -41,6 +41,7 @@ const users = {
 //   "9sm5xK": "http://www.google.com"
 // };
 
+//this object is taken from compass
 const urlDatabase = {
   b6UTxQ: {
         longURL: "https://www.tsn.ca",
@@ -88,6 +89,12 @@ app.get("/urls/:shortURL", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
   const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user};
+
+  //TODO: if page does not exist, maybe redirect to an error page. Throw an error for now.
+  if(!urlDatabase[req.params.shortURL].longURL){
+    res.status(404).send("Error! Page not found!");
+  }
+
   res.render("urls_show", templateVars);
 });
 
@@ -107,18 +114,27 @@ app.post("/urls", (req, res) => {
 
 
 app.get("/u/:shortURL", (req, res) => {
-  const {longURL} = req.body;
+  if(!urlDatabase[req.params.shortURL]){
+    res.status(404).send("Error! Page not found!")
+  }
+
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
 
 app.post("/urls/:shortURL/delete", (req, res) => {
+  //if user not logged in show an error
+  if(!req.cookies.user_id){
+    res.status(401).send("Please login first!");
+  }
+
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
 });
 
 
-app.post("/urls/:shortURL", (req, res)=> {
+app.get("/urls/:shortURL", (req, res)=> {
   res.redirect(`/urls/${req.params.shortURL}`)
 })
 
