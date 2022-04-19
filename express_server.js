@@ -120,7 +120,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   //if user not logged in show an error
-  if(!req.cookies.user_id){
+  if (!req.cookies.user_id){
     res.status(401).send("Please login to access your URLs!");
   }
 
@@ -132,9 +132,15 @@ app.post("/urls", (req, res) => {
 
 
 app.get("/u/:shortURL", (req, res) => {
+
+  if (!req.cookies.user_id){
+    res.status(401).send("Please login to access your URLs!");
+  }
+
   if(!urlDatabase[req.params.shortURL]){
     res.status(404).send("Error! Page not found!")
   }
+
 
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
@@ -158,7 +164,7 @@ app.post("/urls/:shortURL/edit", (req, res) => {
     longURL: req.body.longURL,
     userID: users[req.cookies.user_id].id
   }
-  
+
   res.redirect("/urls");
 });
 
