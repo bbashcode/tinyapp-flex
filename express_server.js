@@ -239,3 +239,16 @@ function generateRandomString() {
 
   return shortURL;
 }
+
+const urlsForUser = function(id, urlDB){
+  const result = {};
+  for(let key in urlDB){
+    if(urlDB[key].userID === id){
+      result[key] = {
+        longURL: urlDB[key].longURL,
+        userID: urlDB[key].userID
+      }
+    }
+  }
+  return result;
+};
