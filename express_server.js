@@ -212,7 +212,7 @@ app.post("/login", (req, res) => {
   const email = req.body.email;
   const password = req.body.password;
 
-  console.log("email: ", email, "password: ", password);
+  // console.log("email: ", email, "password: ", password);
   if(!email || !password) {
     return res.status(400).send("Email or password cannot be empty!");
   }
@@ -223,7 +223,7 @@ app.post("/login", (req, res) => {
     return res.status(403).send("User cannot be found!");
   }
 
-  if(user.password !== password){
+  if(bcrypt.compareSync(user.password, password)){
     return res.status(403).send("Password did not match!");
   }
 
