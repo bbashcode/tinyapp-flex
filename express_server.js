@@ -36,9 +36,20 @@ const users = {
 };
 
 // TODO: possibly move to data layer
-let urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+// let urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
+
+const urlDatabase = {
+  b6UTxQ: {
+        longURL: "https://www.tsn.ca",
+        userID: "aJ48lW"
+    },
+    i3BoGr: {
+        longURL: "https://www.google.ca",
+        userID: "aJ48lW"
+    }
 };
 
 //TODO: Redirect to res.render(/urls)
@@ -54,7 +65,7 @@ app.get("/urls.json", (req, res) => {
 app.get("/urls", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
-  const templateVars = {urls: urlDatabase, user};
+  const templateVars = {urls: urlDatabase[user], user};
   res.render("urls_index", templateVars);
 });
 
@@ -63,7 +74,7 @@ app.get("/urls/new", (req, res) => {
   const user_id = req.cookies["user_id"];
   if(user_id){
     const user = users[user_id];
-    const templateVars = {user};
+    const templateVars = {urls: urlDatabase,user};
     res.render("urls_new", templateVars);
   } else {
     res.redirect("/login");
@@ -75,16 +86,20 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
-  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL], user};
+  const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user};
   res.render("urls_show", templateVars);
 });
 
 
 
 app.post("/urls", (req, res) => {
+  if(!req.cookies.user_id){
+    res.status(401).send("Please login to access your URLs!");
+  }
+
   const {longURL} = req.body;
   const shortURL = generateRandomString();
-  urlDatabase = {...urlDatabase, [shortURL]: longURL};
+  urlDatabase[shortURL] = {longURL, userID: users[req.cookies.user_id]};
   res.redirect(302, `/urls/${shortURL}`);
 });
 
@@ -109,6 +124,10 @@ app.post("/urls/:shortURL", (req, res)=> {
 app.get("/login", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
+  
+  if(user_id){
+    res.redirect("/urls");
+  }
   const templateVars = {user};
   res.render("login", templateVars);
 });
@@ -146,6 +165,9 @@ app.post("/logout", (req, res) => {
 app.get("/register", (req, res) => {
   const user_id = req.cookies["user_id"];
   const user = users[user_id];
+  if(user_id){
+    res.redirect("/urls");
+  }
   const templateVars = {user};
   res.render("register", templateVars);
 });
