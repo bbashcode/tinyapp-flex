@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const morgan = require("morgan");
+const bcrypt = rquire("bcryptjs");
 
 const app = express();
 const PORT = 8080;
@@ -26,12 +27,12 @@ const users = {
   "userRandomID": {
     id: "userRandomID", 
     email: "user@example.com", 
-    password: "purple-monkey-dinosaur"
+    password: bcrypt.hashSync("purple", 10)
   },
  "user2RandomID": {
     id: "user2RandomID", 
     email: "user2@example.com", 
-    password: "dishwasher-funk"
+    password: bcrypt.hashSync("funk", 10)
   }
 };
 
@@ -267,7 +268,7 @@ app.post("/register", (req, res) => {
   users[id] = {
     id,
     email,
-    password
+    password: bcrypt.hashSync(password, 10)
   };
 
   res.cookie("user_id", id);
