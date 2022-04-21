@@ -2,7 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const morgan = require("morgan");
-const bcrypt = rquire("bcryptjs");
+const bcrypt = require("bcryptjs");
 
 const app = express();
 const PORT = 8080;
@@ -20,7 +20,7 @@ app.use(cookieSession({
 app.use(morgan("dev"));
 
 
-const findUserByEmail = (email) => {
+const getUserByEmail = (email) => {
   for(let userId in users){
     const user = users[userId];
     if(user.email === email) {
@@ -224,7 +224,7 @@ app.post("/login", (req, res) => {
     return res.status(400).send("Email or password cannot be empty!");
   }
 
-  const user = findUserByEmail(email);
+  const user = getUserByEmail(email);
 
   if(!user){
     return res.status(403).send("User cannot be found!");
@@ -264,7 +264,7 @@ app.post("/register", (req, res) => {
   }
 
   //find out if email already in use
-  const user = findUserByEmail(email);
+  const user = getUserByEmail(email);
 
   if(user){
     return res.status(400).send("Email alreasdy in use!");
