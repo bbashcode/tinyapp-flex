@@ -279,7 +279,6 @@ app.listen(PORT, () => {
 });
 
 
-// TODO: helper function, possibly move to a different file
 //function to generate 6 character long unique renadom string
 const generateRandomString = function () {
   let length = 6;
