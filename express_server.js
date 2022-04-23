@@ -20,7 +20,7 @@ app.use(cookieSession({
 app.use(morgan("dev"));
 
 
-const getUserByEmail = (email) => {
+const getUserByEmail = (email, users) => {
   for(let userId in users){
     const user = users[userId];
     if(user.email === email) {
