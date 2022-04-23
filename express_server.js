@@ -3,6 +3,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
+const getUserByEmail = require("./helpers");
 
 const app = express();
 const PORT = 8080;
@@ -19,16 +20,6 @@ app.use(cookieSession({
 }));
 app.use(morgan("dev"));
 
-
-const getUserByEmail = (email, users) => {
-  for(let userId in users){
-    const user = users[userId];
-    if(user.email === email) {
-      return user;
-    }
-  }
-  return null;
-};
 
 const users = { 
   "userRandomID": {
