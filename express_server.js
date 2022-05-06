@@ -3,7 +3,7 @@ const bodyParser = require("body-parser");
 const cookieSession = require("cookie-session");
 const morgan = require("morgan");
 const bcrypt = require("bcryptjs");
-const getUserByEmail = require("./helpers");
+const {getUserByEmail, generateRandomString, urlsForUser} = require("./helpers");
 
 const app = express();
 const PORT = 8080;
@@ -279,31 +279,3 @@ app.listen(PORT, () => {
 });
 
 
-//function to generate 6 character long unique renadom string
-const generateRandomString = function () {
-  let length = 6;
-  let shortURL = "";
-
-  const alphaNumeric =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-  for (let i = 0; i < length; i++) {
-    let randomIndex = Math.floor(Math.random() * alphaNumeric.length);
-    shortURL += alphaNumeric.substring(randomIndex, randomIndex + 1);
-  }
-
-  return shortURL;
-}
-
-const urlsForUser = function(id, urlDB){
-  const result = {};
-  for(let key in urlDB){
-    if(urlDB[key].userID === id){
-      result[key] = {
-        longURL: urlDB[key].longURL,
-        userID: urlDB[key].userID
-      }
-    }
-  }
-  return result;
-};
