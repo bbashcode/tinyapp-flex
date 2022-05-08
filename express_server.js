@@ -60,7 +60,7 @@ app.get("/", (req, res) => {
   res.redirect("/login")
 });
 
-//TODO: Remove later - Cleanup?
+
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
@@ -70,7 +70,7 @@ app.get("/urls", (req, res) => {
   const user = users[user_id];
 
   if(!user){
-    res.status(401).send("Please login or register first!");
+    return res.status(401).send("Please login or register first!");
   }
   const templateVars = {urls: urlDatabase[user], user};
   res.render("urls_index", templateVars);
@@ -97,19 +97,19 @@ app.get("/urls/:shortURL", (req, res) => {
   
   //check if user is logged in first
   if(!user){
-    res.render("errorAccess", {user:users[req.session.user_id]});
+    return res.render("errorAccess", {user:users[req.session.user_id]});
   }
 
   const templateVars = {shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL].longURL, user};
 
   const userID = templateVars.user.id;
   if(urlDatabase[req.params.shortURL].userID !== userID){
-    res.render("errorAccess", {user:users[req.session.user_id]});
+    return res.render("errorAccess", {user:users[req.session.user_id]});
   }
 
   //TODO: if page does not exist, maybe redirect to an error page. Throw an error for now.
   if(!urlDatabase[req.params.shortURL].longURL){
-    res.status(404).send("Error! Page not found!");
+    return res.status(404).send("Error! Page not found!");
   }
 
   res.render("urls_show", templateVars);
@@ -120,7 +120,7 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls", (req, res) => {
   //if user not logged in show an error
   if (!req.session.user_id){
-    res.status(401).send("Please login to access your URLs!");
+    return res.status(401).send("Please login to access your URLs!");
   }
 
   const {longURL} = req.body;
@@ -149,7 +149,7 @@ app.get("/u/:shortURL", (req, res) => {
 app.post("/urls/:shortURL/edit", (req, res) => {
   //if user not logged in show an error
   if(!req.session.user_id){
-    res.status(401).render("errorAccess", {user: users[req.session.user_id]});
+    res.status(401).render("errorAccess", {user: users[req.session.user_id]}).redirect();
   }
 
   const templateVars = { shortURL: req.params.shortURL, user: users[req.session.user_id]};
@@ -200,7 +200,7 @@ app.get("/login", (req, res) => {
   const user = users[user_id];
 
   if(user_id){
-    res.redirect("/urls");
+    return res.redirect("/urls");
   }
   const templateVars = {user};
   res.render("login", templateVars);
