@@ -34,12 +34,6 @@ const users = {
   }
 };
 
-// TODO: possibly move to data layer
-// let urlDatabase = {
-//   "b2xVn2": "http://www.lighthouselabs.ca",
-//   "9sm5xK": "http://www.google.com"
-// };
-
 //this object is taken from compass
 const urlDatabase = {
   b6UTxQ: {
@@ -52,6 +46,7 @@ const urlDatabase = {
     }
 };
 
+// GET calls
 app.get("/", (req, res) => {
   if(req.session.user_id){
     res.redirect("/urls");
@@ -107,26 +102,12 @@ app.get("/urls/:shortURL", (req, res) => {
     return res.render("errorAccess", {user:users[req.session.user_id]});
   }
 
-  //TODO: if page does not exist, maybe redirect to an error page. Throw an error for now.
+
   if(!urlDatabase[req.params.shortURL].longURL){
     return res.status(404).send("Error! Page not found!");
   }
 
   res.render("urls_show", templateVars);
-});
-
-
-
-app.post("/urls", (req, res) => {
-  //if user not logged in show an error
-  if (!req.session.user_id){
-    return res.status(401).send("Please login to access your URLs!");
-  }
-
-  const {longURL} = req.body;
-  const shortURL = generateRandomString();
-  urlDatabase[shortURL] = {longURL, userID: users[req.session.user_id]};
-  res.redirect(302, `/urls/${shortURL}`);
 });
 
 
@@ -145,6 +126,41 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(longURL);
 });
 
+
+app.get("/login", (req, res) => {
+  const user_id = req.session["user_id"];
+  const user = users[user_id];
+
+  if(user_id){
+    return res.redirect("/urls");
+  }
+  const templateVars = {user};
+  res.render("login", templateVars);
+});
+
+app.get("/register", (req, res) => {
+  const user_id = req.session["user_id"];
+  const user = users[user_id];
+  if(user_id){
+    res.redirect("/urls");
+  }
+  const templateVars = {user};
+  res.render("register", templateVars);
+});
+
+
+// Post calls
+app.post("/urls", (req, res) => {
+  //if user not logged in show an error
+  if (!req.session.user_id){
+    return res.status(401).send("Please login to access your URLs!");
+  }
+
+  const {longURL} = req.body;
+  const shortURL = generateRandomString();
+  urlDatabase[shortURL] = {longURL, userID: users[req.session.user_id]};
+  res.redirect(302, `/urls/${shortURL}`);
+});
 
 app.post("/urls/:shortURL/edit", (req, res) => {
   //if user not logged in show an error
@@ -168,10 +184,6 @@ app.post("/urls/:shortURL/edit", (req, res) => {
 });
 
 
-app.get("/urls/:shortURL", (req, res)=> {
-  res.redirect(`/urls/${req.params.shortURL}`)
-})
-
 app.post("/urls/:shortURL/delete", (req, res) => {
   //if user not logged in show an error
   if(!req.session.user_id){
@@ -187,23 +199,6 @@ app.post("/urls/:shortURL/delete", (req, res) => {
 
   delete urlDatabase[req.params.shortURL];
   res.redirect("/urls");
-});
-
-
-app.get("/urls/:shortURL", (req, res)=> {
-  res.redirect(`/urls/${req.params.shortURL}`)
-})
-
-
-app.get("/login", (req, res) => {
-  const user_id = req.session["user_id"];
-  const user = users[user_id];
-
-  if(user_id){
-    return res.redirect("/urls");
-  }
-  const templateVars = {user};
-  res.render("login", templateVars);
 });
 
 app.post("/login", (req, res) => {
@@ -233,17 +228,6 @@ app.post("/login", (req, res) => {
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
   res.redirect("/login");
-});
-
-
-app.get("/register", (req, res) => {
-  const user_id = req.session["user_id"];
-  const user = users[user_id];
-  if(user_id){
-    res.redirect("/urls");
-  }
-  const templateVars = {user};
-  res.render("register", templateVars);
 });
 
 app.post("/register", (req, res) => {
